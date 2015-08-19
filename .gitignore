@@ -1,0 +1,4 @@
+docker-compose.yml
+nginx/conf/server.d/*
+!nginx/conf/server.d/virtual_host.conf.dist
+mysql/data/*

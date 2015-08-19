@@ -1,0 +1,52 @@
+nginx:
+  image: fntlnz/nginx:1.6.2
+  volumes:
+    - nginx/conf:/usr/local/nginx/conf
+    - ..:{project_host_folder}
+  ports:
+    - "127.0.0.51:80:80"
+  links:
+    - fpm:fpm
+    - mailcatcher:mailcatcher
+
+fpm:
+  build: dockerfiles/php-fpm
+  volumes:
+    - php-fpm/etc:/usr/local/php/etc
+    - ..:{project_host_folder}
+  links:
+    - mysql:mysql
+    - redis:redis
+    - sphinx:sphinx
+
+mysql:
+  image: mysql
+  ports:
+    - "127.0.0.51:3306:3306"
+  environment:
+    - MYSQL_ROOT_PASSWORD=root
+  volumes:
+    - mysql/data:/var/lib/mysql
+
+mailcatcher:
+  image: fntlnz/mailcatcher
+  ports:
+    - "127.0.0.51:1080:1080"
+
+redis:
+  image: redis
+  ports:
+    - "127.0.0.51:6379:6379"
+
+sphinx:
+  command: bash -c "./searchd.sh"
+  image: leodido/sphinxsearch:2.2.7
+  volumes:
+   - sphinx/sphinx.conf:/usr/local/etc/sphinx.conf
+   - sphinx/idx:/var/idx/sphinx
+   - sphinx/log:/var/log/sphinx
+   - sphinx/lib:/var/lib/sphinx
+  ports:
+   - "9306:9306"
+  links:
+   - mysql:mysql
