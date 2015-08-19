@@ -1,4 +1,4 @@
-[{project_www_dir}]
+[{PROJECT_NAME}]
 
 user = fpm
 group = fpm
@@ -12,7 +12,7 @@ pm.min_spare_servers = 1
 pm.max_spare_servers = 2
 pm.max_requests = 100
 
-chdir = /var/www/{project_www_dir}/web
+chdir = /var/www/{PROJECT_NAME}/{INDEX_FOLDER}
 
 security.limit_extensions = .php
 

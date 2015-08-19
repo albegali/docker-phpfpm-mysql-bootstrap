@@ -1,28 +1,28 @@
 server {
     listen                          80;
 
-    server_name                     {servername}.it;
+    server_name                     {HOST_NAME};
 
     access_log                      /dev/stdout;
 
     proxy_pass_header               Server;
-    root                            /var/www/{project_www_dir};
-    index                           {index_file};
+    root                            /var/www/{PROJECT_NAME};
+    index                           {INDEX_FILE};
 
     include                         inc/mime.types;
 
     location ~* \.(eot|ttf|woff)$ {
         add_header                  Access-Control-Allow-Origin *;
-        try_files                   $uri $uri/ /{index_file}$is_args$args;
+        try_files                   $uri $uri/ /{INDEX_FILE}$is_args$args;
     }
 
     location / {
-        try_files                   $uri $uri/ /{index_file}$is_args$args;
+        try_files                   $uri $uri/ /{INDEX_FILE}$is_args$args;
     }
 
     location ~* .php$ {
         fastcgi_pass                fpm:9000;
-        fastcgi_param               SCRIPT_FILENAME /var/www/{project_www_dir}/web/{index_file};
+        fastcgi_param               SCRIPT_FILENAME /var/www/{PROJECT_NAME}/{INDEX_FOLDER}/{INDEX_FILE};
         fastcgi_buffers             16 16k;
         fastcgi_buffer_size         64k;
         include                     inc/fastcgi_params;
